@@ -22,15 +22,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { rantValidationSchema } from "@/service/validation/rant.validation";
 import { RantFormValue } from "@/interface/rant";
 import rantApi from "@/api/rant.api";
+import { AxiosResponse } from "axios";
 
 interface Props extends DialogProps {}
 
 const CreateDrawer: FC<Props> = (props) => {
+  const queryClient = useQueryClient();
   const form = useForm<RantFormValue>({
     defaultValues: {
       rant: "",
@@ -43,10 +45,13 @@ const CreateDrawer: FC<Props> = (props) => {
     mutationFn: async (value: RantFormValue) => rantApi.createRant(value),
     mutationKey: ["create-rant"],
 
-    onSuccess: () => {
+    onSuccess: (response: AxiosResponse) => {
       form.reset();
-      toast.success("Rant is Created sucecssfully", {
+      toast.success(response.data?.message || "Created successfully", {
         position: "top-right",
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["rants"],
       });
     },
     onError: () => {

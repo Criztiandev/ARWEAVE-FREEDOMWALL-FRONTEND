@@ -13,6 +13,6 @@ export default {
   },
 
   createRant: async (value: RantFormValue) => {
-    return await AxiosInstance.post("/rant/create-todo", value);
+    return await AxiosInstance.post("/rant/create", value);
   },
 };
