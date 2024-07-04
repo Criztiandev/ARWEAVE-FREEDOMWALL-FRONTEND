@@ -22,37 +22,46 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { z } from "zod";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { rantValidationSchema } from "@/service/validation/rant.validation";
+import { RantFormValue } from "@/interface/rant";
+import rantApi from "@/api/rant.api";
 
 interface Props extends DialogProps {}
 
-const createRantSchema = z.object({
-  rant: z
-    .string()
-    .min(1, "Rant is required")
-    .max(500, "Rant cannot exceed 500 characters"),
-  toc: z.boolean().refine((value) => value === true, {
-    message: "You must agree to the terms and conditions",
-  }),
-});
-
-type FormValue = z.infer<typeof createRantSchema>;
-
 const CreateDrawer: FC<Props> = (props) => {
-  const form = useForm<FormValue>({
+  const form = useForm<RantFormValue>({
     defaultValues: {
       rant: "",
       toc: false,
     },
-    resolver: zodResolver(createRantSchema),
+    resolver: zodResolver(rantValidationSchema),
   });
 
-  const onSubmit = (value: FormValue) => {
-    console.log(value);
+  const mutation = useMutation({
+    mutationFn: async (value: RantFormValue) => rantApi.createRant(value),
+    mutationKey: ["create-rant"],
+
+    onSuccess: () => {
+      form.reset();
+      toast.success("Rant is Created sucecssfully", {
+        position: "top-right",
+      });
+    },
+    onError: () => {
+      toast.error("Something went wrong, Please try again later", {
+        position: "top-right",
+      });
+    },
+  });
+
+  const onSubmit = (value: RantFormValue) => {
+    mutation.mutate(value);
   };
   return (
     <Drawer {...props}>
-      <DrawerContent className="max-w-4xl mx-auto h-[75vh] px-[32px]">
+      <DrawerContent className="max-w-4xl mx-auto h-[80vh] px-[32px]">
         <DrawerHeader className="flex justify-center items-center flex-col gap-4">
           <DrawerTitle className="text-4xl text-center font-lovelo mt-4">
             Create Rant
@@ -83,14 +92,14 @@ const CreateDrawer: FC<Props> = (props) => {
               )}
             />
 
-            <div className="flex justify-center items-center flex-col px-[64px]">
+            <div className="flex justify-center items-center flex-col">
               <FormField
                 control={form.control}
                 name="toc"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="mb-8 border-none">
                     <FormControl>
-                      <div className="flex  items-start mb-4  gap-4">
+                      <div className="flex  items-start gap-4">
                         <Checkbox
                           checked={field.value}
                           onCheckedChange={field.onChange}
@@ -103,12 +112,14 @@ const CreateDrawer: FC<Props> = (props) => {
                       </div>
                     </FormControl>
 
-                    <FormMessage />
+                    <FormMessage className="pl-8" />
                   </FormItem>
                 )}
               />
 
-              <Button className="w-[150px]">Create</Button>
+              <Button className="w-[150px]" disabled={mutation.isPending}>
+                {mutation.isPending ? "Submiting...." : "Create"}
+              </Button>
             </div>
           </form>
         </Form>
