@@ -14,7 +14,7 @@ interface Props extends DialogProps {}
 const RantModal: React.FC<Props> = (props) => {
   return (
     <Dialog {...props}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="w-[320px] rounded-[5px] max-w-[420px]">
         <DialogHeader>
           <DialogTitle className="mb-4">Rant #1</DialogTitle>
           <DialogDescription>

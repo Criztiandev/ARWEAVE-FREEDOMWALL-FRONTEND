@@ -24,15 +24,15 @@ function App() {
 
   return (
     <>
-      <main className="p-4 relative min-h-screen max-w-7xl mx-auto">
-        <section className="my-4 h-screen flex justify-center items-center">
-          <div className="flex justify-center items-center flex-col gap-12">
-            <div className="space-y-4">
-              <h1 className="text-[84px] text-center font-bold font-lovelo">
+      <main className="relative min-h-screen p-4">
+        <section className="my-4 h-screen flex justify-center items-center max-w-7xl mx-auto">
+          <div className="flex justify-center items-center flex-col gap-4">
+            <div className="space-y-4 ">
+              <h1 className="font-lovelo text-6xl text-center sm:text-[72px] md:text-[94px]">
                 Arweave Freedom Wall
               </h1>
 
-              <p className="text-center w-[800px] mx-auto">
+              <p className="text-center max-w-[900px] mx-auto">
                 Your voice matters, and now it can echo through time. This
                 freedom wall, powered by Arweave's permanent storage, ensures
                 your thoughts, ideas, and expressions will remain uncensored and
@@ -43,7 +43,7 @@ function App() {
             </div>
 
             <Button
-              className="mx-auto w-[300px]"
+              className="w-full max-w-72 mx-auto my-4"
               onClick={() => setOpenDrawer((prev) => !prev)}
             >
               Create
@@ -51,11 +51,17 @@ function App() {
           </div>
         </section>
 
-        <Separator className="mt-8 mb-12" />
-        <div className="grid grid-cols-4 gap-4 mb-4 ">
+        <Separator className="my-8" />
+
+        <div className="grid grid-cols-1 gap-4 mb-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  max-w-7xl mx-auto ">
           {query.data && query?.data?.length > 0 ? (
-            query.data?.map((props: rantSchema) => (
-              <RantCard key={props.id} {...props} onSelect={handleSelectRant} />
+            query.data?.map((props: rantSchema, index: number) => (
+              <RantCard
+                key={props.id}
+                index={index}
+                {...props}
+                onSelect={handleSelectRant}
+              />
             ))
           ) : (
             <>

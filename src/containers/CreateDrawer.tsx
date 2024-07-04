@@ -61,19 +61,22 @@ const CreateDrawer: FC<Props> = (props) => {
   };
   return (
     <Drawer {...props}>
-      <DrawerContent className="max-w-4xl mx-auto h-[80vh] px-[32px]">
+      <DrawerContent className="mx-auto h-[80vh] max-w-3xl">
         <DrawerHeader className="flex justify-center items-center flex-col gap-4">
           <DrawerTitle className="text-4xl text-center font-lovelo mt-4">
             Create Rant
           </DrawerTitle>
-          <DrawerDescription className="w-[80%] text-center ">
+          <DrawerDescription className="text-center max-w-xl">
             Your rant will be permanently stored on the blockchain. Once posted,
             it cannot be edited or deleted. Think carefully before sharing.
           </DrawerDescription>
         </DrawerHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className=" px-[64px]">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="p-4 md:px-[64px]"
+          >
             <FormField
               control={form.control}
               name="rant"
@@ -83,7 +86,7 @@ const CreateDrawer: FC<Props> = (props) => {
                   <FormControl>
                     <Textarea
                       {...field}
-                      className="w-full h-[300px] "
+                      className="w-full h-[200px]"
                       placeholder="Enter your rant"
                     />
                   </FormControl>
@@ -104,7 +107,7 @@ const CreateDrawer: FC<Props> = (props) => {
                           checked={field.value}
                           onCheckedChange={field.onChange}
                         />
-                        <span>
+                        <span className="text-[14px]">
                           I agree that whatever I post on this platform is my
                           sole responsibility, and the owner is not liable for
                           my content
