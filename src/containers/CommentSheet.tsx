@@ -1,29 +1,62 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import rantApi from "@/api/rant.api";
+import CommentCard from "@/components/card/CommentCard";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
 import { DialogProps } from "@radix-ui/react-dialog";
+import { useQuery } from "@tanstack/react-query";
 import React, { FC } from "react";
+import { toast } from "sonner";
 
 interface Props extends DialogProps {
   selected: string | null;
   setSelected: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-const CommentSheet: FC<Props> = (props) => {
+const CommentSheet: FC<Props> = ({ selected, ...props }) => {
+  const { isLoading, isError, data, isSuccess } = useQuery({
+    queryFn: async () => await rantApi.fetchAllRantComment(selected || ""),
+    queryKey: [`comment-${selected}`],
+    enabled: !!selected,
+  });
+
+  if (isError) {
+    toast.error("Something went wrong, Please try again later", {
+      position: "top-right",
+    });
+  }
+
+  const { comment } = data;
+
   return (
     <Sheet {...props}>
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>Comments</SheetTitle>
-          <SheetDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
-          </SheetDescription>
-        </SheetHeader>
+      <SheetContent className="p-0">
+        <ScrollArea className="h-screen p-6">
+          {isLoading && <div>Loading</div>}
+          {isSuccess && (
+            <SheetHeader>
+              <SheetTitle>Comments</SheetTitle>
+              <div className="flex flex-col gap-4">
+                {comment.map((items: any, index: number) => (
+                  <CommentCard key={index} comment={items.comment} />
+                ))}
+              </div>
+            </SheetHeader>
+          )}
+        </ScrollArea>
       </SheetContent>
     </Sheet>
   );

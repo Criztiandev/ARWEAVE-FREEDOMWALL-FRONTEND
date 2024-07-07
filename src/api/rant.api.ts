@@ -20,6 +20,11 @@ export default {
     return result.data;
   },
 
+  fetchAllRantComment: async (id: string) => {
+    const result = await AxiosInstance.get(`/rant/comment/${id}`);
+    return result.data;
+  },
+
   createRant: async (value: RantFormValue) => {
     return await AxiosInstance.post("/rant/create", value);
   },
