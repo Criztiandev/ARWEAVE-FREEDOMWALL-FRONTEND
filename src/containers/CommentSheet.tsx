@@ -22,6 +22,7 @@ const CommentSheet: FC<Props> = ({ selected, ...props }) => {
   const { isLoading, isError, data, isSuccess } = useQuery({
     queryFn: async () => await rantApi.fetchAllRantComment(selected || ""),
     queryKey: [`comment-${selected}`],
+    refetchInterval: 500,
     enabled: !!selected,
   });
 
@@ -30,8 +31,6 @@ const CommentSheet: FC<Props> = ({ selected, ...props }) => {
       position: "top-right",
     });
   }
-
-  const { comment } = data;
 
   return (
     <Sheet {...props}>
@@ -42,7 +41,7 @@ const CommentSheet: FC<Props> = ({ selected, ...props }) => {
             <SheetHeader>
               <SheetTitle>Comments</SheetTitle>
               <div className="flex flex-col gap-4">
-                {comment.map((items: any, index: number) => (
+                {data?.comment?.map((items: any, index: number) => (
                   <CommentCard key={index} comment={items.comment} />
                 ))}
               </div>

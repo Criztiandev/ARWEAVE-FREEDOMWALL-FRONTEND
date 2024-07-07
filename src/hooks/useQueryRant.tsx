@@ -19,6 +19,7 @@ const useQueryRant = () => {
       }
       return undefined; // Return undefined when there are no more pages
     },
+    refetchInterval: 500,
   });
 
   return { query, setLimit };

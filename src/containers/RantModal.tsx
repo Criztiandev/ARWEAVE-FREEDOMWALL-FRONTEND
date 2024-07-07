@@ -51,54 +51,62 @@ const RantModal: React.FC<Props> = ({ selected, setSelected, ...props }) => {
     <>
       <Dialog {...props} onOpenChange={handleOpenChange}>
         <DialogContent className=" rounded-[5px] max-w-[520px]">
-          <DialogHeader>
-            <DialogTitle className="mb-4 flex gap-2 items-center">
-              {isLoading ? "Loading" : isError ? "Error" : "Rant Details"}
-              {data && (
-                <Badge className="bg-[#0097e6] capitalize">
-                  {(data as Rant)?.category}
-                </Badge>
-              )}
-            </DialogTitle>
-
-            {isLoading && (
-              <DialogDescription className="h-[100px] flex justify-center items-center">
+          {isLoading && (
+            <>
+              <DialogTitle>Loading</DialogTitle>
+              <div className="h-[100px] flex justify-center items-center">
                 <LoadingBlob />
-              </DialogDescription>
-            )}
-            {isError && (
-              <DialogDescription>Someting went wrong</DialogDescription>
-            )}
-            {isSuccess && (
+              </div>
+            </>
+          )}
+
+          {isError && (
+            <>
+              <DialogTitle>Loading</DialogTitle>
+              <div>Someting went wrong</div>
+            </>
+          )}
+
+          {isSuccess && (
+            <DialogHeader>
+              <DialogTitle className="mb-4 flex gap-2 items-center">
+                {isLoading ? "Loading" : isError ? "Error" : "Rant Details"}
+                {data && (
+                  <Badge className="bg-[#0097e6] capitalize">
+                    {(data as Rant)?.category}
+                  </Badge>
+                )}
+              </DialogTitle>
+
               <div className="h-[150px]">
                 <DialogDescription className="text-black overflow-auto break-all">
                   {(data as Rant)?.rant || "Rant"}
                 </DialogDescription>
               </div>
-            )}
 
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)}>
-                <TextAreaField
-                  label="Comment"
-                  name="comment"
-                  className="h-[100px] md:h-[100px]"
-                  placeholder="Enter your comment"
-                />
-                <div className="flex justify-end items-center gap-4">
-                  <Button
-                    type="button"
-                    onClick={() => setOpenSheet((prev) => !prev)}
-                  >
-                    View Comment
-                  </Button>
-                  <Button disabled={mutation.isPending}>
-                    {mutation.isPending ? "Processing..." : "Comment"}
-                  </Button>
-                </div>
-              </form>
-            </Form>
-          </DialogHeader>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                  <TextAreaField
+                    label="Comment"
+                    name="comment"
+                    className="h-[100px] md:h-[100px]"
+                    placeholder="Enter your comment"
+                  />
+                  <div className="flex justify-end items-center gap-4">
+                    <Button
+                      type="button"
+                      onClick={() => setOpenSheet((prev) => !prev)}
+                    >
+                      View Comment
+                    </Button>
+                    <Button disabled={mutation.isPending}>
+                      {mutation.isPending ? "Processing..." : "Comment"}
+                    </Button>
+                  </div>
+                </form>
+              </Form>
+            </DialogHeader>
+          )}
         </DialogContent>
       </Dialog>
 

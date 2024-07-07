@@ -28,9 +28,6 @@ function App() {
   if (query.isError) return <ErrorScreen />;
 
   const { pages } = query.data as InfiniteData<RantPayload>;
-
-  console.log(pages);
-
   return (
     <>
       <main className="relative min-h-screen p-4">
@@ -85,14 +82,16 @@ function App() {
           )}
         </>
 
-        <div className="w-full  mt-4 flex justify-center items-center">
-          <Button
-            onClick={() => query.fetchNextPage()}
-            disabled={query.isFetching}
-          >
-            {query.isFetching ? "Loading..." : "Load more"}
-          </Button>
-        </div>
+        {pages.length >= 10 && (
+          <div className="w-full  mt-4 flex justify-center items-center">
+            <Button
+              onClick={() => query.fetchNextPage()}
+              disabled={query.isFetchingNextPage}
+            >
+              {query.isFetchingNextPage ? "Loading..." : "Load more"}
+            </Button>
+          </div>
+        )}
       </main>
 
       <RantSheet
